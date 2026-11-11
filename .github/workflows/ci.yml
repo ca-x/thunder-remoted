@@ -34,6 +34,15 @@ jobs:
         run: cargo clippy --all-targets -- -D warnings
       - name: Test
         run: cargo test --all-features
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Frontend build and tests
+        run: cd web && npm ci && npm run build && npm test
+      - name: Mock NAS smoke test
+        run: cargo build && python3 tests/smoke.py
 
   docker:
     name: Docker build

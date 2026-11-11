@@ -1,2 +1,7 @@
 target
 .env
+web/node_modules/
+web/dist/
+web/*.tsbuildinfo
+__pycache__/
+*.lpk

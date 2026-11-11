@@ -1,0 +1,48 @@
+test_concurrent_creation_respects_last_quota_slot (__main__.ApiSmoke.test_concurrent_creation_respects_last_quota_slot) ... Concurrent POST /api/tasks -> 200, 409; exactly one NAS submission
+ok
+test_errors_remain_json_and_unknown_quota_fails_closed (__main__.ApiSmoke.test_errors_remain_json_and_unknown_quota_fails_closed) ... POST /api/analyze -> 400 {"error": {"code": "invalid_request", "message": "Failed to parse the request body as JSON: EOF while parsing an object at line 1 column 1"}}
+POST /api/analyze -> 400 {"error": {"code": "invalid_request", "message": "不支持的下载链接类型"}}
+GET /api/tasks?limit=bad -> 400 {"error": {"code": "invalid_request", "message": "Failed to deserialize query string: limit: invalid digit found in string"}}
+GET /api/tasks?limit=0 -> 400 {"error": {"code": "invalid_request", "message": "limit must be between 1 and 10000"}}
+PATCH /api/tasks/task-1 -> 400 {"error": {"code": "invalid_request", "message": "Failed to deserialize the JSON body into the target type: action: unknown variant `destroy`, expected `pause` or `resume` at line 1 column 20"}}
+PATCH /api/tasks/missing -> 404 {"error": {"code": "task_not_found", "message": "找不到该任务"}}
+DELETE /api/tasks -> 400 {"error": {"code": "invalid_request", "message": "请选择要删除的任务"}}
+DELETE /api/tasks -> 400 {"error": {"code": "invalid_request", "message": "Invalid task ID"}}
+POST /api/tasks -> 400 {"error": {"code": "invalid_request", "message": "请至少选择一个文件"}}
+GET /api/missing -> 404 {"error": {"code": "not_found", "message": "API endpoint not found"}}
+PUT /api/tasks -> 405 {"error": {"code": "method_not_allowed", "message": "Method not allowed"}}
+POST /api/tasks -> 502 {"error": {"code": "nas_error", "message": "NAS 请求失败：API error Some(\"500\"): fixture failure"}}
+GET /api/health -> 200 {"connected": false, "nas": "http://127.0.0.1:42167/", "ok": true}
+ok
+test_every_endpoint_and_selected_files (__main__.ApiSmoke.test_every_endpoint_and_selected_files) ... GET /api/health -> 200 {"connected": true, "nas": "http://127.0.0.1:42167/", "ok": true}
+GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/quota -> 200 {"limit": 3, "remaining": 3, "usage": 0}
+GET /api/tasks?limit=1 -> 200 [{"created_time": "2026-11-11T08:00:00Z", "file_size": "104857600", "id": "task-1", "name": "海岸.mkv", "params": {"files": [{"name": "海岸.mkv"}, {"name": "notes.pdf"}]}, "phase": "PHASE_TYPE_RUNNING", "progress": "4200", "space": "fixture-device-space", "sub_file_index": null, "type": null}]
+GET /api/tasks?phase=PHASE_TYPE_COMPLETE&limit=1 -> 200 [{"file_size": "2048", "id": "task-2", "name": "手册.pdf", "params": null, "phase": "PHASE_TYPE_COMPLETE", "progress": "10000", "space": "", "sub_file_index": null, "type": null}]
+POST /api/analyze -> 200 {"resources": [{"file_id": "resource-1", "files": [{"children": [{"index": 0, "name": "海岸.mkv", "size": "104857600"}, {"index": 3, "name": "预告.mp4", "size": "2048"}], "name": "影片"}, {"index": 1, "name": "手册.pdf", "size": "2048"}, {"index": 2, "name": "封面.png", "size": "2048"}], "infohash": "0123456789abcdef0123456789abcdef01234567", "name": "海岸合集", "size": "104863744"}]}
+POST /api/tasks -> 200 {"task": {"id": "new-1", "name": "选中文件", "params": {"file_id": "resource-1", "parent_folder_id": "downloads", "sub_file_index": "0,2", "total_file_count": "2"}, "phase": "PHASE_TYPE_PENDING", "space": ""}}
+POST /api/tasks -> 200 {"task": {"id": "new-2", "name": "新下载", "params": {"total_file_count": "1", "url": "https://example.invalid/file.zip"}, "phase": "PHASE_TYPE_PENDING", "space": ""}}
+PATCH /api/tasks/task-1 -> 200 {"ok": true}
+PATCH /api/tasks/task-1 -> 200 {"ok": true}
+DELETE /api/tasks -> 200 {"ok": true}
+ok
+test_exhausted_and_unlimited_quota (__main__.ApiSmoke.test_exhausted_and_unlimited_quota) ... POST /api/tasks -> 409 {"error": {"code": "quota_exhausted", "message": "今日免费额度已用完（3/3），已使用 3 次"}}
+GET /api/quota -> 200 {"limit": -1, "remaining": null, "usage": 3}
+POST /api/tasks -> 200 {"task": {"id": "new-4", "name": "新下载", "params": {"total_file_count": "1", "url": "ed2k://|file|fixture|1|abc|/"}, "phase": "PHASE_TYPE_PENDING", "space": ""}}
+ok
+test_reconnects_on_rotation_auth_and_network_once (__main__.ApiSmoke.test_reconnects_on_rotation_auth_and_network_once) ... GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/device -> 200 {"disk_usage": {"limit": 4398046511104, "usage": 1099511627776}, "download_paths": [{"id": "downloads", "path": "/downloads/"}, {"id": "data", "path": "/data/"}], "name": "书房 NAS"}
+GET /api/device -> 502 {"error": {"code": "nas_error", "message": "NAS 请求失败：API error Some(\"401\"): fixture failure"}}
+ok
+test_selected_files_require_resource_id (__main__.ApiSmoke.test_selected_files_require_resource_id) ... POST /api/tasks -> 400 {"error": {"code": "invalid_request", "message": "NAS 未返回资源 file_id，无法选择子文件；未创建任务"}}
+ok
+test_static_frontend_and_gzip (__main__.ApiSmoke.test_static_frontend_and_gzip) ... GET / -> 200 HTML; GET /assets/*.js -> 200 gzip
+ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.794s
+
+OK

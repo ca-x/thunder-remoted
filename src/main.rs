@@ -178,7 +178,7 @@ async fn local_mode(base: Option<String>, action: &LocalAction) -> Result<()> {
         }
         LocalAction::Tasks { limit } => {
             let tasks = nas.tasks(*limit).await?;
-            println!("{:<34} {:<22} {}", "ID", "PHASE", "NAME");
+            println!("{:<34} {:<22} NAME", "ID", "PHASE");
             for t in tasks {
                 println!("{:<34} {:<22} {}", t.id, t.phase.as_str(), t.name);
             }
@@ -299,7 +299,7 @@ async fn import_tokens(
 async fn devices(cred: ClientCredentials) -> Result<()> {
     let mut client = load_client(cred).await?;
     let devs = client.devices().await?;
-    println!("{:<38} {:<24} {}", "ID", "PLATFORM", "NAME");
+    println!("{:<38} {:<24} NAME", "ID", "PLATFORM");
     for d in devs {
         println!(
             "{:<38} {:<24} {}",
@@ -390,10 +390,7 @@ async fn list(cred: ClientCredentials, all: bool) -> Result<()> {
         }
     };
     let tasks = client.tasks(filter).await?;
-    println!(
-        "{:<34} {:<22} {:>10}  {}",
-        "ID", "PHASE", "PROGRESS", "NAME"
-    );
+    println!("{:<34} {:<22} {:>10}  NAME", "ID", "PHASE", "PROGRESS");
     for t in tasks {
         let prog = t
             .progress

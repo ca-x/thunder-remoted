@@ -1,0 +1,8 @@
+.git
+target
+web/node_modules
+web/dist
+web/*.tsbuildinfo
+tests/__pycache__
+.env
+*.lpk

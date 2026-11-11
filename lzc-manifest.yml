@@ -1,0 +1,11 @@
+application:
+  subdomain: thunderdl
+  upstreams:
+    - location: /
+      backend: http://thunder-remoted:3600/
+services:
+  thunder-remoted:
+    image: embed:thunder-remoted
+    environment:
+      - THUNDER_NAS_URL=http://thunder:2345
+      - THUNDER_BIND=0.0.0.0:3600

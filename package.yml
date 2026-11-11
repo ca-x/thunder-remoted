@@ -1,0 +1,15 @@
+package: cloud.lazycat.app.thunder-remoted
+version: 0.1.0
+name: 迅雷下载管理
+description: 管理 NAS 本地迅雷下载，无需云端登录。
+min_os_version: 1.5.0
+homepage: https://github.com/ca-x/thunder-remoted
+author: ca-x
+license: MIT
+locales:
+  zh:
+    name: 迅雷下载管理
+    description: 管理 NAS 本地迅雷下载，无需云端登录。
+  en:
+    name: Thunder Download Manager
+    description: Manage local NAS downloads without a cloud login.

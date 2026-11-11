@@ -1,0 +1,7 @@
+manifest: ./lzc-manifest.yml
+pkgout: ./
+icon: ./icon.png
+images:
+  thunder-remoted:
+    dockerfile: Dockerfile
+    context: .

@@ -1226,12 +1226,13 @@ dependencies = [
  "serde_json",
  "thunder-task-rs",
  "tokio",
+ "url",
 ]
 
 [[package]]
 name = "thunder-task-rs"
 version = "0.1.0"
-source = "git+https://github.com/lib-x/thunder-task-rs#beee85cfdd000d86d782eb79c51e783961d0a4a5"
+source = "git+https://github.com/lib-x/thunder-task-rs#e14203ebd23f1e0e6ab20ecdf365ab3ed986e268"
 dependencies = [
  "image",
  "qrcode",

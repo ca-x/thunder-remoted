@@ -19,6 +19,7 @@ anyhow = "1"
 serde_json = "1"
 dirs = "6"
 rpassword = "7"
+url = "2"
 
 [profile.release]
 strip = true

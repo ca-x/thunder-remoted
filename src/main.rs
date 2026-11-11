@@ -4,6 +4,8 @@ use thunder_task_rs::task::TaskFilter;
 use thunder_task_rs::{auth::ClientCredentials, types::Phase, Client, LocalNas};
 use url::Url;
 
+mod serve;
+
 #[derive(Parser)]
 #[command(
     name = "thunder-remoted",
@@ -26,6 +28,15 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Command {
+    /// Serve the local NAS download manager and web interface (no cloud login).
+    Serve {
+        #[arg(long)]
+        addr: Option<String>,
+        #[arg(long)]
+        base: Option<String>,
+        #[arg(long, default_value = "web/dist")]
+        web_dir: std::path::PathBuf,
+    },
     /// Log in with a QR code / verification link and store the session
     Login,
     /// Import tokens from an existing web session you logged into yourself.
@@ -119,6 +130,11 @@ enum TaskAction {
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     match &cli.command {
+        Command::Serve {
+            addr,
+            base,
+            web_dir,
+        } => serve::run(addr.clone(), base.clone(), web_dir.clone()).await,
         Command::Login => login(client_creds(&cli)?).await,
         Command::Import {
             access_token,

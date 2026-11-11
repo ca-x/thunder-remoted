@@ -1,0 +1,26 @@
+[package]
+name = "thunder-remoted"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "Remote download controller for Xunlei NAS devices: scan-to-login, pick a device, submit tasks"
+license = "MIT"
+repository = "https://github.com/ca-x/thunder-remoted"
+
+[[bin]]
+name = "thunder-remoted"
+path = "src/main.rs"
+
+[dependencies]
+thunder-task-rs = { git = "https://github.com/lib-x/thunder-task-rs" }
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+anyhow = "1"
+serde_json = "1"
+dirs = "6"
+rpassword = "7"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1
